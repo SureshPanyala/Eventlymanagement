@@ -5,6 +5,7 @@ import { ArrowLeft, CalendarDays, CheckCircle2, Clock, MapPin, Pencil, Ticket, U
 import EventBanner from "@/components/EventBanner";
 import EventCard from "@/components/EventCard";
 import CategoryBadge from "@/components/CategoryBadge";
+import CopyLinkButton from "@/components/CopyLinkButton";
 import { getEvent, getUserRegistration, relatedEvents } from "@/lib/events";
 import { formatDate, formatPrice, formatTime } from "@/lib/format";
 import { viewer } from "@/lib/viewer";
@@ -100,7 +101,8 @@ export default async function EventDetailPage({ params }: { params: { id: string
               </div>
             </div>
 
-            <div className="mt-6">
+            <div className="mt-6 flex items-start gap-2">
+              <div className="min-w-0 flex-1">
               {registration ? (
                 <div className="rounded-2xl bg-emerald-50 p-4 text-sm text-emerald-900 ring-1 ring-emerald-200">
                   <p className="flex items-center gap-2 font-semibold"><CheckCircle2 className="h-4 w-4" /> You are registered</p>
@@ -122,6 +124,8 @@ export default async function EventDetailPage({ params }: { params: { id: string
                   <Ticket className="h-4 w-4" /> Register now
                 </Link>
               )}
+              </div>
+              <CopyLinkButton />
             </div>
             {isOwner ? (
               <Link href={`/events/${event.id}/edit`} className="mt-3 flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-border text-sm font-semibold transition hover:bg-surface2">
