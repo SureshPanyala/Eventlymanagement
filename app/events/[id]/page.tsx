@@ -13,7 +13,18 @@ export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
   const event = await getEvent(Number(params.id), null).catch(() => null);
-  return { title: event?.title ?? "Event" };
+  if (!event) return { title: "Event" };
+  const description = event.description.replace(/\s+/g, " ").trim().slice(0, 200) || "Event on Evently";
+  return {
+    title: event.title,
+    description,
+    openGraph: {
+      type: "website",
+      title: event.title,
+      description,
+      images: event.banner_url ? [{ url: event.banner_url, alt: event.title }] : undefined,
+    },
+  };
 }
 
 export default async function EventDetailPage({ params }: { params: { id: string } }): Promise<JSX.Element> {
