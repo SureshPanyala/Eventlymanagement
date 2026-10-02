@@ -29,21 +29,37 @@ export function eventBreadcrumbSchema(event: Pick<EventRow, "id" | "title">): Re
   };
 }
 
+/** All Evently events take place in Los Angeles. */
+const EVENT_TIME_ZONE = "America/Los_Angeles";
+
+function offsetMinutesAt(instantMs: number): number {
+  const name = new Intl.DateTimeFormat("en-US", { timeZone: EVENT_TIME_ZONE, timeZoneName: "longOffset" })
+    .formatToParts(new Date(instantMs))
+    .find((p) => p.type === "timeZoneName")?.value;
+  const m = name?.match(/GMT([+-])(\d{2}):(\d{2})/);
+  if (!m) return 0;
+  return (m[1] === "-" ? -1 : 1) * (Number(m[2]) * 60 + Number(m[3]));
+}
+
 /**
- * Event times are stored as the venue's wall-clock time pinned to UTC and there is no
- * per-event timezone column, so startDate is emitted as local date-time with NO offset
- * (exactly what the page shows) rather than claiming a "Z" instant that would be wrong
- * for any venue outside UTC.
+ * Event times are stored as the venue's wall-clock time pinned to UTC (what the page
+ * shows), so the UTC fields are Los Angeles local time. Emit that wall-clock time with
+ * the Los Angeles offset in effect on that date (-07:00 in summer, -08:00 in winter).
  */
 export function wallClockIso(d: Date | string): string {
-  return new Date(d).toISOString().slice(0, 16);
+  const wallMs = new Date(d).getTime();
+  const offset = offsetMinutesAt(wallMs - offsetMinutesAt(wallMs) * 60_000);
+  const abs = Math.abs(offset);
+  const sign = offset < 0 ? "-" : "+";
+  const hh = String(Math.floor(abs / 60)).padStart(2, "0");
+  const mm = String(abs % 60).padStart(2, "0");
+  return `${new Date(wallMs).toISOString().slice(0, 19)}${sign}${hh}:${mm}`;
 }
 
 /** Event markup, only for published events created by real organizers (not seeded samples). */
 export function eventSchema(event: EventRow): Record<string, unknown> | null {
   if (event.is_sample || event.status !== "published") return null;
   const url = absoluteUrl(`/events/${event.id}`);
-  const seatsLeft = Math.max(0, event.capacity - event.seats_taken);
   return {
     "@context": "https://schema.org",
     "@type": "Event",
@@ -54,12 +70,5 @@ export function eventSchema(event: EventRow): Record<string, unknown> | null {
     ...(event.banner_url ? { image: [absoluteUrl(event.banner_url)] } : {}),
     ...(event.description ? { description: event.description } : {}),
     organizer: { "@type": "Person", name: event.organizer_name },
-    offers: {
-      "@type": "Offer",
-      url,
-      price: (event.price_cents / 100).toFixed(2).replace(/\.00$/, ""),
-      priceCurrency: "USD",
-      availability: seatsLeft === 0 ? "https://schema.org/SoldOut" : "https://schema.org/InStock",
-    },
   };
 }
