@@ -7,7 +7,11 @@ import { CATEGORIES, categoryLabel, isCategory } from "@/lib/categories";
 import { listPublishedEvents, type DateFilter, type EventRow } from "@/lib/events";
 
 export const dynamic = "force-dynamic";
-export const metadata: Metadata = { title: "Explore events" };
+export const metadata: Metadata = {
+  title: { absolute: "Upcoming Events to Attend and Register | Evently" },
+  description:
+    "Browse upcoming events by category and date, then register with your name, email and phone. Technology, Business, Music and more.",
+};
 
 const WHEN: { value: DateFilter; label: string }[] = [
   { value: "any", label: "Any date" },

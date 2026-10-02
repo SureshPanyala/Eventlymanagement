@@ -8,7 +8,7 @@ import { eventBreadcrumbSchema, eventSchema } from "@/lib/structured-data";
 import EventCard from "@/components/EventCard";
 import CategoryBadge from "@/components/CategoryBadge";
 import { getEvent, getUserRegistration, relatedEvents } from "@/lib/events";
-import { formatDate, formatPrice, formatTime } from "@/lib/format";
+import { eventMetaDescription, formatDate, formatPrice, formatTime } from "@/lib/format";
 import { viewer } from "@/lib/viewer";
 
 export const dynamic = "force-dynamic";
@@ -16,7 +16,7 @@ export const dynamic = "force-dynamic";
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
   const event = await getEvent(Number(params.id), null).catch(() => null);
   if (!event) return { title: "Event" };
-  const description = event.description.replace(/\s+/g, " ").trim().slice(0, 200) || "Event on Evently";
+  const description = eventMetaDescription(event);
   return {
     title: event.title,
     description,
