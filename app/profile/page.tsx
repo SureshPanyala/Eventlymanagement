@@ -6,7 +6,7 @@ import { requireUserPage } from "@/lib/auth";
 import { removeSampleDataAction, updateProfileAction } from "@/lib/event-actions";
 
 export const dynamic = "force-dynamic";
-export const metadata: Metadata = { title: "Profile" };
+export const metadata: Metadata = { title: "My Profile", robots: { index: false } };
 
 const ERRORS: Record<string, string> = {
   name: "Your name cannot be empty.",

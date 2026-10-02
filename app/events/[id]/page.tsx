@@ -1,8 +1,10 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { ArrowLeft, CalendarDays, CheckCircle2, Clock, MapPin, Pencil, Ticket, Users } from "lucide-react";
+import { ArrowLeft, CalendarDays, CheckCircle2, ChevronRight, Clock, MapPin, Pencil, Ticket, Users } from "lucide-react";
 import EventBanner from "@/components/EventBanner";
+import JsonLd from "@/components/JsonLd";
+import { eventBreadcrumbSchema, eventSchema } from "@/lib/structured-data";
 import EventCard from "@/components/EventCard";
 import CategoryBadge from "@/components/CategoryBadge";
 import { getEvent, getUserRegistration, relatedEvents } from "@/lib/events";
@@ -48,8 +50,12 @@ export default async function EventDetailPage({ params }: { params: { id: string
   else if (isPast) blockReason = "This event has already taken place.";
   else if (seatsLeft === 0) blockReason = "This event is fully booked.";
 
+  const eventLd = eventSchema(event);
+
   return (
     <main>
+      <JsonLd data={eventBreadcrumbSchema(event)} />
+      {eventLd ? <JsonLd data={eventLd} /> : null}
       <div className="relative">
         <EventBanner bannerUrl={event.banner_url} category={event.category} title={event.title} className="h-64 w-full sm:h-80 md:h-[420px]" large />
         <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-black/50 to-transparent" aria-hidden />
@@ -62,6 +68,15 @@ export default async function EventDetailPage({ params }: { params: { id: string
 
       <div className="mx-auto grid max-w-6xl gap-10 px-4 sm:px-6 lg:grid-cols-[1fr_360px]">
         <div className="animate-fade-in-up min-w-0 pt-8">
+          <nav aria-label="Breadcrumb" className="mb-4 text-sm text-textMuted">
+            <ol className="flex min-w-0 flex-wrap items-center gap-1.5">
+              <li><Link href="/" className="transition hover:text-text">Home</Link></li>
+              <li aria-hidden><ChevronRight className="h-3.5 w-3.5" /></li>
+              <li><Link href="/events" className="transition hover:text-text">Events</Link></li>
+              <li aria-hidden><ChevronRight className="h-3.5 w-3.5" /></li>
+              <li aria-current="page" className="min-w-0 truncate font-medium text-text">{event.title}</li>
+            </ol>
+          </nav>
           <div className="flex flex-wrap items-center gap-2">
             <CategoryBadge category={event.category} />
             {isDraft ? <span className="rounded-full bg-amber-100 px-2.5 py-1 text-xs font-semibold text-amber-800">Draft</span> : null}

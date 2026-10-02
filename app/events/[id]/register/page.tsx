@@ -9,7 +9,10 @@ import { getEvent, getUserRegistration, registerForEvent } from "@/lib/events";
 import { formatDate, formatPrice, formatTime } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
-export const metadata: Metadata = { title: "Register" };
+export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+  const event = await getEvent(Number(params.id), null).catch(() => null);
+  return { title: event ? `Register: ${event.title}` : "Register" };
+}
 
 const ERRORS: Record<string, string> = {
   input: "Please enter your name, a valid email and a phone number.",
