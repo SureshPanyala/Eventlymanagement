@@ -15,6 +15,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: { default: SITE_TITLE, template: "%s · Evently" },
   description: SITE_DESCRIPTION,
+  alternates: { canonical: "./" },
   openGraph: {
     type: "website",
     siteName: "Evently",
