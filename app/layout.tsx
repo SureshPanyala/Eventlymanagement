@@ -16,6 +16,7 @@ export const metadata: Metadata = {
   title: { default: SITE_TITLE, template: "%s · Evently" },
   description: SITE_DESCRIPTION,
   alternates: { canonical: "./" },
+  verification: { google: "KtqK-VYBl1dEXN3yj0mOiny8sD2cR6KopZTkeptfGiM" },
   openGraph: {
     type: "website",
     siteName: "Evently",
