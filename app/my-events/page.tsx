@@ -11,7 +11,7 @@ import { formatDate, formatPrice, formatTime } from "@/lib/format";
 import { categoryLabel } from "@/lib/categories";
 
 export const dynamic = "force-dynamic";
-export const metadata: Metadata = { title: "My events" };
+export const metadata: Metadata = { title: "My Events", robots: { index: false } };
 
 export default async function MyEventsPage({
   searchParams,

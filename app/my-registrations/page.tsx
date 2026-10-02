@@ -8,7 +8,7 @@ import { listUserRegistrations } from "@/lib/events";
 import { formatDate, formatTime } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
-export const metadata: Metadata = { title: "My registrations" };
+export const metadata: Metadata = { title: "My Registrations", robots: { index: false } };
 
 export default async function MyRegistrationsPage(): Promise<JSX.Element> {
   const user = await requireUserPage("/my-registrations");

@@ -5,6 +5,8 @@ import EventBanner from "@/components/EventBanner";
 import CategoryIcon from "@/components/CategoryIcon";
 import CategoryBadge from "@/components/CategoryBadge";
 import EmptyState from "@/components/EmptyState";
+import JsonLd from "@/components/JsonLd";
+import { siteIdentitySchema } from "@/lib/structured-data";
 import { CATEGORIES } from "@/lib/categories";
 import { categoryCounts, listFeaturedEvents, listPublishedEvents, type EventRow } from "@/lib/events";
 import { formatDate, formatPrice, formatTime } from "@/lib/format";
@@ -27,6 +29,7 @@ export default async function Home(): Promise<JSX.Element> {
   const spotlight = featured[0];
   return (
     <main>
+      <JsonLd data={siteIdentitySchema()} />
       <section className="relative overflow-hidden border-b border-border">
         <div className="pointer-events-none absolute -right-32 -top-32 h-96 w-96 rounded-full bg-accent/10 blur-3xl" aria-hidden />
         <div className="pointer-events-none absolute -bottom-40 -left-24 h-80 w-80 rounded-full bg-amber-300/20 blur-3xl" aria-hidden />

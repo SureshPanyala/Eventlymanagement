@@ -3,7 +3,7 @@ import EventForm, { EVENT_FORM_ERRORS } from "@/components/EventForm";
 import { requireUserPage } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
-export const metadata: Metadata = { title: "Create event" };
+export const metadata: Metadata = { title: "Create an Event", robots: { index: false } };
 
 export default async function NewEventPage({ searchParams }: { searchParams: { error?: string } }): Promise<JSX.Element> {
   await requireUserPage("/events/new");
